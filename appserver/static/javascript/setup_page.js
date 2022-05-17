@@ -1,6 +1,6 @@
 "use strict";
 
-const appName = "ta";
+const appName = "ta_for_tenableio_was";
 const appNamespace = {
     owner: "nobody",
     app: appName,
@@ -12,7 +12,7 @@ const pwName = "password";
 // Splunk Web Framework Provided files
 require([
     "jquery", "splunkjs/splunk",
-], function($, splunkjs) {
+], function ($, splunkjs) {
     console.log("setup_page.js require(...) called");
 
     // Register .on( "click", handler ) for "Complete Setup" button
@@ -119,9 +119,9 @@ require([
     }
 
     function isTrue(v) {
-        if (typeof(v) === typeof(true)) return v;
-        if (typeof(v) === typeof(1)) return v!==0;
-        if (typeof(v) === typeof('true')) {
+        if (typeof (v) === typeof (true)) return v;
+        if (typeof (v) === typeof (1)) return v !== 0;
+        if (typeof (v) === typeof ('true')) {
             if (v.toLowerCase() === 'true') return true;
             if (v === 't') return true;
             if (v === '1') return true;

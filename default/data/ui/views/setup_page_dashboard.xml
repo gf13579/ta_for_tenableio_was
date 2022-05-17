@@ -17,7 +17,7 @@ https://docs.splunk.com/Documentation/Splunk/latest/Viz/PanelreferenceforSimplif
                     <h3>Setup Page</h3>
                     <div>
                         <div class='text'>
-                            <span>Enter Google CSE API Key (optional):</span>
+                            <span>Enter tenable.io API Key (in the form accessKey=abc123...;secretKey=xyz987...):</span>
                             <input type='password' id='apikey_input'></input>
                         </div>
                         <!-- Complete Setup button will call the completeSetup() function

@@ -2,7 +2,7 @@ import sys
 import os
 import json
 from loguru import logger
-import bin.tenablelib as tenablelib
+import tenablelib as tenablelib
 from pprint import pprint
 
 log_file = os.environ["SPLUNK_HOME"] + "/var/log/splunk/ta_for_tenableio_was.log"
@@ -36,13 +36,13 @@ class MyScript(Script):
         # Set to false so each input can have an optional interval parameter
         scheme.use_single_instance = False
 
-        earliest_argument = Argument("earliest_date")
-        earliest_argument.title = "Query Date Range (days)"
-        earliest_argument.data_type = Argument.data_type_string
-        earliest_argument.description = (
+        max_hours_ago_argument = Argument("max_hours_ago")
+        max_hours_ago_argument.title = "Query Date Range (days)"
+        max_hours_ago_argument.data_type = Argument.data_type_string
+        max_hours_ago_argument.description = (
             "Filter results by discovery/index date, where supported. 0 = all time."
         )
-        scheme.add_argument(earliest_argument)
+        scheme.add_argument(max_hours_ago_argument)
         return scheme
 
     def validate_input(self, validation_definition):
@@ -61,16 +61,15 @@ class MyScript(Script):
         """
         # Get the parameters from the ValidationDefinition object,
 
-        earliest_date = str(validation_definition.parameters["earliest_date"])
-        if not earliest_date or (earliest_date == ""):
-            earliest_date = "0"
+        max_hours_ago = str(validation_definition.parameters["max_hours_ago"])
+        if not max_hours_ago or (max_hours_ago == ""):
+            max_hours_ago = "0"
 
-        logger.debug(f"Chance to validate earliest_date: {earliest_date}")
+        logger.debug(f"Chance to validate max_hours_ago: {max_hours_ago}")
 
         # lazy validation
-        if not earliest_date.isascii():
-            raise ValueError("earliest_date must be a datetime string")
-
+        if not max_hours_ago.isdecimal():
+            raise ValueError("max_hours_ago must be a number")
 
     def stream_events(self, inputs, ew):
         """This function handles all the action: splunk calls this modular input
@@ -90,7 +89,7 @@ class MyScript(Script):
         logger.debug(f"stanza is {stanza}")
 
         # Get mod input params
-        earliest_date = str(inputs.inputs[stanza]["earliest_date"])
+        max_hours_ago = str(inputs.inputs[stanza]["max_hours_ago"])
 
         api_key = None
         storage_passwords = self.service.storage_passwords
@@ -105,7 +104,7 @@ class MyScript(Script):
             api_key=api_key,
         )
 
-        for r in tlib.get_results(earliest_date=earliest_date):
+        for r in tlib.get_results(max_hours_ago=max_hours_ago):
             if isinstance(r, list):
                 for list_item in r:
                     event = Event()
@@ -122,6 +121,7 @@ class MyScript(Script):
                 ew.write_event(event)
 
         logger.debug(f"Finished queries. Events created: {len(results)}")
+
 
 if __name__ == "__main__":
     sys.exit(MyScript().run(sys.argv))
