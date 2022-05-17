@@ -11,7 +11,7 @@ logger.add(sink=log_file, level="INFO")
 logger.add(sink=sys.stderr, level="ERROR")
 
 # for development
-logger.add(sink=log_file, level="DEBUG")
+# logger.add(sink=log_file, level="DEBUG")
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lib"))
 from splunklib.modularinput import *
@@ -37,11 +37,13 @@ class MyScript(Script):
         scheme.use_single_instance = False
 
         max_hours_ago_argument = Argument("max_hours_ago")
-        max_hours_ago_argument.title = "Query Date Range (days)"
+        max_hours_ago_argument.title = "Max hours ago"
         max_hours_ago_argument.data_type = Argument.data_type_string
         max_hours_ago_argument.description = (
-            "Filter results by discovery/index date, where supported. 0 = all time."
+            "Retrieve results from scans finalised in the past x hours"
         )
+        max_hours_ago_argument.required_on_create = True
+        max_hours_ago_argument.required_on_edit = True
         scheme.add_argument(max_hours_ago_argument)
         return scheme
 
@@ -89,7 +91,7 @@ class MyScript(Script):
         logger.debug(f"stanza is {stanza}")
 
         # Get mod input params
-        max_hours_ago = str(inputs.inputs[stanza]["max_hours_ago"])
+        max_hours_ago = int(inputs.inputs[stanza]["max_hours_ago"])
 
         api_key = None
         storage_passwords = self.service.storage_passwords
@@ -100,7 +102,7 @@ class MyScript(Script):
                 api_key = p
                 break
 
-        tlib = tenablelib.dorklib(
+        tlib = tenablelib.tenablelib(
             api_key=api_key,
         )
 
@@ -113,14 +115,13 @@ class MyScript(Script):
                     # Tell the EventWriter to write this event
                     ew.write_event(event)
             else:
-                ew.write_event(event)
                 event = Event()
                 event.stanza = stanza
                 event.data = json.dumps(r)
                 # Tell the EventWriter to write this event
                 ew.write_event(event)
 
-        logger.debug(f"Finished queries. Events created: {len(results)}")
+        logger.info(f"Finished queries. Events created: {len(results)}")
 
 
 if __name__ == "__main__":

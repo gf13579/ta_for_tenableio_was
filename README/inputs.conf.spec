@@ -2,4 +2,5 @@
 *Ingests WAS events from tenable.io
 
 interval = <value>
-earliest_date = <value>
+max_hours_ago = <value>
+python.version=python3

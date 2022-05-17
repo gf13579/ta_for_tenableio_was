@@ -1,13 +1,11 @@
 <nav search_view="search">
-  <view name="search" default='true' />
+  <view name="search"  default='true'/>
   <view name="alerts" />
-  <collection label="Edit lookups">
-    <a href="/app/lookup_editor/lookup_edit?owner=nobody&amp;namespace=ta_for_dorks&amp;lookup=dork_entities.csv&amp;type=csv" target="_blank">Entities</a>
-    <a href="/app/lookup_editor/lookup_edit?owner=nobody&amp;namespace=ta_for_dorks&amp;lookup=dork_queries.csv&amp;type=csv" target="_blank">Queries</a>
+  <collection label="Configuration">
+    <a href="/app/ta_for_tenableio_was/setup_page_dashboard?action=edit" target="_blank">Edit API keys</a>
   </collection>
   <collection label="Advanced">
-    <view name="analytics_workspace" />
-    <view name="datasets" />
+    <a href="/app/ta_for_tenableio_was/search?q=search%20earliest%3D-24h%20index%3D_internal%20source%3D*ta_for_tenableio_was.log" target="_blank">TA log</a>
     <view name="reports" />
     <view name="dashboards" />
   </collection>
