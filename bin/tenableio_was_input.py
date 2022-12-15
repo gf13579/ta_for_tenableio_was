@@ -86,6 +86,8 @@ class MyScript(Script):
         :param ew: an EventWriter object
         """
 
+        logger.info("stream_events started")
+
         # there should only be one input as we're setting scheme.use_single_instance = False
         stanza = list(inputs.inputs.keys())[0]
         logger.debug(f"stanza is {stanza}")
