@@ -7,6 +7,7 @@ Author: Greg Ford
 | Version | Date         | Comments      |
 | ------- | ------------ | ------------- |
 | 0.0.1   | May 17, 2022 | First version |
+| 0.0.4   | Sep 12, 2024 | splunklib SDK update |
 
 ## Using this TA
 
